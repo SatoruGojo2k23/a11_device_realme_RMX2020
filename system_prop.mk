@@ -29,6 +29,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Display
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.sf.lcd_density=320
+persist.sys.brightness.low.gamma=true
 	
 # Hardware Acceleration
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
