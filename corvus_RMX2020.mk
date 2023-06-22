@@ -22,13 +22,13 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/realme/RMX2020/device.mk)
 
 # Inherit some common LineageOS stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+$(call inherit-product, vendor/corvus/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := lineage_RMX2020
+PRODUCT_NAME := corvus_RMX2020
 PRODUCT_DEVICE := RMX2020
 PRODUCT_BRAND := realme
-PRODUCT_MODEL := Realme G70 Series
+PRODUCT_MODEL := Realme C3
 PRODUCT_MANUFACTURER := realme
 
 TARGET_BOOT_ANIMATION_RES := 720
@@ -45,5 +45,5 @@ PRODUCT_GMS_CLIENTID_BASE := android-oppo
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.fingerprint=$(BUILD_FINGERPRINT)
 
-# Time
-LINEAGE_VERSION_APPEND_TIME_OF_DAY := true
+CORVUS_MAINTAINER=Rinto
+USE_GAPPS := true
