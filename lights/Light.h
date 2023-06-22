@@ -22,68 +22,6 @@
 #include <unordered_map>
 #include <mutex>
 
-
-
-You have no unread notifications
-Code
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-Commit
-Browse the repository at this point in the history
-RMX2020: lights: Fix brightness curve
-* These devices report values in 0-2047 or 0-4095 which results in
-  extremely uneven behaviour in brightness slider
-* Map brightness values logarithmatically to match aosp behaviour
-* Generated using https://gist.github.com/SamarV-121/3fe97552db73d9cc673ce7cf250d27b7
-
-Change-Id: I794fdca04bb29b8431fd20b769fc09749481645b
- Rising-13.0
-@SamarV-121
-@sarthakroy2002
-SamarV-121 authored and sarthakroy2002 committed on Feb 7
-1 parent 9b61b14
-commit 14b492f
-Showing 2 changed files with 58 additions and 4 deletions.
-  12 changes: 8 additions & 4 deletions12  
-aidl/lights/Light.cpp
-@@ -80,11 +80,14 @@ static uint32_t getBrightness(const HwLightState& state) {
-}
-
-static inline uint32_t scaleBrightness(uint32_t brightness, uint32_t maxBrightness) {
-    if (brightness == 0) {
-        return 0;
-    }
-    LOG(DEBUG) << "Received brightness: " << brightness;
-
-    if (maxBrightness == 4095)
-        return brightness_table_0xfff[brightness];
-    if (maxBrightness == 2047)
-        return brightness_table_0x7ff[brightness];
-
-    return (brightness - 1) * (maxBrightness - 1) / (0xFF - 1) + 1;
-    return brightness;
-}
-
-static inline uint32_t getScaledBrightness(const HwLightState& state, uint32_t maxBrightness) {
-@@ -93,6 +96,7 @@ static inline uint32_t getScaledBrightness(const HwLightState& state, uint32_t m
-
-static void handleBacklight(const HwLightState& state) {
-    uint32_t brightness = getScaledBrightness(state, getMaxBrightness(LCD_LED MAX_BRIGHTNESS));
-    LOG(DEBUG) << "Setting brightness: " << brightness;
-    set(LCD_LED BRIGHTNESS, brightness);
-}
-
-  50 changes: 50 additions & 0 deletions50  
-aidl/lights/Light.h
-@@ -22,6 +22,56 @@
-#include <hardware/lights.h>
-#include <vector>
-
 static unsigned int brightness_table_0x7ff[256] = {
     0,    113,  218,  299,  379,  444,  484,  540,  580,  629,  669,  685,
     725,  766,  790,  830,  854,  870,  911,  935,  951,  991,  1015, 1040,
