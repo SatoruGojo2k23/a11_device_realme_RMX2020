@@ -54,6 +54,12 @@ static int rgbToBrightness(const LightState& state) {
             + (150 * ((color >> 8) & 0x00ff))
             + (29 * (color & 0x00ff))) >> 8;
 }
+LOG(DEBUG) << "Received brightness: " << brightness;
+
+    if (maxBrightness == 4095)
+        return brightness_table_0xfff[brightness];
+    if (maxBrightness == 2047)
+        return brightness_table_0x7ff[brightness];
 
 Light::Light() {
     mLights.emplace(Type::BACKLIGHT, std::bind(&Light::handleBacklight, this, std::placeholders::_1));
@@ -63,6 +69,7 @@ void Light::handleBacklight(const LightState& state) {
     int maxBrightness = get("/sys/class/leds/lcd-backlight/max_brightness", -1);
     if (maxBrightness < 0) {
         maxBrightness = 255;
+return brightness;
     }
     int sentBrightness = rgbToBrightness(state);
     int brightness = sentBrightness * maxBrightness / 255;
@@ -76,6 +83,7 @@ Return<Status> Light::setLight(Type type, const LightState& state) {
 
     if (it == mLights.end()) {
         return Status::LIGHT_NOT_SUPPORTED;
+
     }
 
     /*
@@ -99,6 +107,8 @@ Return<void> Light::getSupportedTypes(getSupportedTypes_cb _hidl_cb) {
 
     return Void();
 }
+
+LOG(DEBUG) << "Setting brightness: " << brightness;
 
 }  // namespace implementation
 }  // namespace V2_0
